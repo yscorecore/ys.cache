@@ -16,3 +16,7 @@ jobs:
         dotnet-version: 3.1.100
     - name: 03 Build with dotnet
       run: dotnet build --configuration Release
+    - name: 04 Run Unit test
+      run: dotnet test
+    - name: 05 Echo file
+      run: cat README.md
