@@ -25,7 +25,7 @@ namespace YS.Cache.Impl.Memory
         {
             this.memoryCache.Remove(key);
         }
-        public void Set<T>(string key, T value, TimeSpan cacheTimeSpan, Action<string, object> expireCallback = null)
+        public void Set<T>(string key, T value, TimeSpan slidingTimeSpan)
         {
             if (value == null)
             {
@@ -33,21 +33,21 @@ namespace YS.Cache.Impl.Memory
             }
             var cacheOptions = new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = cacheTimeSpan,
+                SlidingExpiration = slidingTimeSpan,
             };
-            if (expireCallback != null)
+          
+            this.memoryCache.Set(key, value, cacheOptions);
+        }
+        public void Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
+        {
+            if (value == null)
             {
-                cacheOptions.PostEvictionCallbacks.Add(new PostEvictionCallbackRegistration
-                {
-                    EvictionCallback = (k, v, reason, state) =>
-                    {
-                        if (reason == EvictionReason.Expired)
-                        {
-                            expireCallback(k as string, v);
-                        }
-                    }
-                });
+                throw new ArgumentNullException(nameof(value));
             }
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                 AbsoluteExpiration = absoluteDateTimeOffset,
+            };
             this.memoryCache.Set(key, value, cacheOptions);
         }
     }

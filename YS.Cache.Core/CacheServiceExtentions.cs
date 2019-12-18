@@ -11,17 +11,8 @@ namespace YS.Cache
             var (ok, val) = cacheService.Get<T>(key);
             return ok ? val : default(T);
         }
-        public static void Set<T>(this ICacheService cacheService, string key, T value, DateTimeOffset expireTime, Action<string, object> expireCallback = null)
-        {
-            if (expireTime < DateTimeOffset.Now)
-            {
-                throw new ArgumentOutOfRangeException(nameof(expireTime), "The expire time should late than current time.");
-            }
 
-            cacheService.Set(key, value, expireTime - DateTimeOffset.Now, expireCallback);
-
-        }
-        public static T GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, TimeSpan cacheTimeSpan, Action<string, object> expireCallback = null)
+        public static T GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, TimeSpan slidingTimeSpan)
         {
             var (ok, val) = cacheService.Get<T>(key);
             if (ok)
@@ -31,11 +22,11 @@ namespace YS.Cache
             else
             {
                 var newValue = valueFactory(key);
-                cacheService.Set(key, newValue, cacheTimeSpan, expireCallback);
+                cacheService.Set(key, newValue, slidingTimeSpan);
                 return newValue;
             }
         }
-        public static T GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, DateTimeOffset expireTime, Action<string, object> expireCallback = null)
+        public static T GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, DateTimeOffset absoluteDateTimeOffset)
         {
             var (ok, val) = cacheService.Get<T>(key);
             if (ok)
@@ -45,7 +36,7 @@ namespace YS.Cache
             else
             {
                 var newValue = valueFactory(key);
-                cacheService.Set(key, newValue, expireTime, expireCallback);
+                cacheService.Set(key, newValue, absoluteDateTimeOffset);
                 return newValue;
             }
         }

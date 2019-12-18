@@ -7,7 +7,8 @@ namespace YS.Cache
     public interface ICacheService
     {
         (bool, T) Get<T>(string key);
-        void Set<T>(string key, T value, TimeSpan cacheTimeSpan, Action<string, object> expireCallback = null);
+        void Set<T>(string key, T value, TimeSpan slidingTimeSpan);
+        void Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset);
         void RemoveByKey(string key);
 
     }

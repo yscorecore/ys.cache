@@ -34,8 +34,6 @@ namespace YS.Cache.Impl.Redis
                     return (true, (T)Bytes2Object(bys));
                 }
             }
-
-
         }
 
         public void RemoveByKey(string key)
@@ -43,32 +41,48 @@ namespace YS.Cache.Impl.Redis
             this.distributedCache.Remove(key);
         }
 
-        public void Set<T>(string key, T value, TimeSpan cacheTimeSpan, Action<string, object> expireCallback = null)
+        public void Set<T>(string key, T value, TimeSpan slidingTimeSpan)
         {
             if (value == null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            if (expireCallback != null)
-            {
-                throw new NotSupportedException($"Can not set expire callback when use '{this.GetType().FullName}'.");
-            }
             if (value is string)
             {
                 this.distributedCache.SetString(key, value as string, new DistributedCacheEntryOptions
                 {
-                    SlidingExpiration = cacheTimeSpan,
+                    SlidingExpiration = slidingTimeSpan,
                 });
             }
             else
             {
                 this.distributedCache.Set(key, Object2Bytes(value), new DistributedCacheEntryOptions
                 {
-                    SlidingExpiration = cacheTimeSpan,
+                    SlidingExpiration = slidingTimeSpan,
                 });
             }
         }
-
+        public void Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if (value is string)
+            {
+                this.distributedCache.SetString(key, value as string, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpiration = absoluteDateTimeOffset,
+                });
+            }
+            else
+            {
+                this.distributedCache.Set(key, Object2Bytes(value), new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpiration = absoluteDateTimeOffset,
+                });
+            }
+        }
         private byte[] Object2Bytes(object obj)
         {
             using (var ms = new MemoryStream())
@@ -87,5 +101,9 @@ namespace YS.Cache.Impl.Redis
                 return bf.Deserialize(ms);
             }
         }
+
+      
+
+      
     }
 }
