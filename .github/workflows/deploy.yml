@@ -20,4 +20,4 @@ jobs:
     - name: 03 Create Package
       run: dotnet pack -o .publish --configuration Release
     - name: 04 Push Package
-      run: sh ./.github/scripts/pushpack.sh .publish ${{secrets.NUGET_APIKEY}}
+      run: bash ./.github/scripts/pushpack.sh .publish ${{secrets.NUGET_APIKEY}}
