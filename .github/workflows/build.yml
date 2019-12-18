@@ -18,5 +18,3 @@ jobs:
       run: dotnet build --configuration Release
     - name: 04 Run Unit test
       run: dotnet test
-    - name: 05 Echo file
-      run: cat README.md
