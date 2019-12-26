@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace YS.Cache.Impl.Redis
 {
+    [ServiceClass]
     public class RedisCacheService : ICacheService
     {
         public RedisCacheService(IDistributedCache distributedCache)

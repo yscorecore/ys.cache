@@ -1,20 +1,17 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace YS.Cache.Impl.Memory
 {
     [TestClass]
-    public class MemoryCacheServiceTest
+    public class MemoryCacheServiceTest : CacheServiceUnitTestBase
     {
-        private ICacheService cacheService;
-        [TestInitialize]
-        public void Setup()
-        { 
-            
-        }
-        [TestMethod]
-        public void ShouldReturnNullIfNotContainsKey()
+        protected override ICacheService OnCreateCacheService()
         {
-          
+            var host = Knife.Hosting.Host.CreateHost();
+            return host.Services.GetRequiredService<ICacheService>();
         }
     }
+
+
 }

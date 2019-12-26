@@ -3,6 +3,7 @@ using System;
 
 namespace YS.Cache.Impl.Memory
 {
+    [ServiceClass]
     public class MemoryCacheService : ICacheService
     {
         public MemoryCacheService(IMemoryCache memoryCache)
@@ -27,10 +28,7 @@ namespace YS.Cache.Impl.Memory
         }
         public void Set<T>(string key, T value, TimeSpan slidingTimeSpan)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            this.AssertNotNull(nameof(value), value);
             var cacheOptions = new MemoryCacheEntryOptions
             {
                 SlidingExpiration = slidingTimeSpan,
@@ -40,15 +38,19 @@ namespace YS.Cache.Impl.Memory
         }
         public void Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            this.AssertNotNull(nameof(value), value);
             var cacheOptions = new MemoryCacheEntryOptions
             {
                  AbsoluteExpiration = absoluteDateTimeOffset,
             };
             this.memoryCache.Set(key, value, cacheOptions);
+        }
+        private void AssertNotNull<T>(string name, T value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(name);
+            }
         }
     }
 }
