@@ -72,7 +72,7 @@ namespace YS.Cache
         public async Task ShouldReturnDefaultValueIfExpiredSlidingTimeSpan()
         {
             cacheService.Set("abc", "abcValue", TimeSpan.FromMilliseconds(1000));
-            await Task.Delay(1000);
+            await Task.Delay(1100);
             var res = cacheService.Get<string>("abc");
             Assert.AreEqual(false, res.Exists);
             Assert.AreEqual(default, res.Value);
@@ -93,7 +93,7 @@ namespace YS.Cache
         public async Task ShouldReturnDefaultValueIfExpiredAbsoluteDateTimeOffset()
         {
             cacheService.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(1000));
-            await Task.Delay(1000);
+            await Task.Delay(1100);
             var res = cacheService.Get<string>("abc");
             Assert.AreEqual(false, res.Exists);
             Assert.AreEqual(default, res.Value);
@@ -103,7 +103,7 @@ namespace YS.Cache
         public async Task ShouldReturnDefaultValueIfExpiredAbsoluteDateTimeOffsetEvenCalledBefore()
         {
             cacheService.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(1000));
-            await Task.Delay(500);
+            await Task.Delay(600);
             var res1 = cacheService.Get<string>("abc");
             Assert.AreEqual(true, res1.Exists);
             Assert.AreEqual("abcValue", res1.Value);
