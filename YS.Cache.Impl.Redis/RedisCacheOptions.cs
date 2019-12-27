@@ -7,6 +7,7 @@ namespace YS.Cache.Impl.Redis
     [OptionsClass]
     public class RedisCacheOptions
     {
-        public string InstanceName { get; set; }
+        public string InstanceName { get; set; } = "Default";
+        public string ConnectionString { get; set; } = "localhost";
     }
 }

@@ -8,7 +8,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
-    <PackageReference Include="YS.DependencyInjection.Base" Version="1.0.4" />
+    <PackageReference Include="YS.DependencyInjection.Base" Version="1.0.8" />
   </ItemGroup>
 
   <ItemGroup>

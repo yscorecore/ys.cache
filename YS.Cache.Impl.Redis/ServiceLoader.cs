@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +13,7 @@ namespace YS.Cache.Impl.Redis
             services.AddDistributedRedisCache((setupAction) =>
             {
                 setupAction.InstanceName = options.InstanceName;
+                setupAction.Configuration = options.ConnectionString;
             });
         }
     }

@@ -73,7 +73,7 @@ namespace YS.Cache.Impl.Redis
             {
                 this.distributedCache.SetString(key, value as string, new DistributedCacheEntryOptions
                 {
-                    AbsoluteExpiration = absoluteDateTimeOffset,
+                     AbsoluteExpiration=absoluteDateTimeOffset
                 });
             }
             else
