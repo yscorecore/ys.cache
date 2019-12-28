@@ -4,13 +4,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace YS.Cache.Impl.Memory
 {
     [TestClass]
-    public class MemoryCacheServiceTest : CacheServiceUnitTestBase
+    public class MemoryCacheServiceTest : CacheServiceTestBase
     {
-        protected override ICacheService OnCreateCacheService()
-        {
-            var host = Knife.Hosting.Host.CreateHost();
-            return host.Services.GetRequiredService<ICacheService>();
-        }
+       
     }
 
 
