@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="docker-compose.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Docker.DotNet" Version="3.125.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0-preview-20191216-02" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0-beta2" />
@@ -17,13 +21,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="YS.Docker.Impl.Dotnet" Version="1.0.0" />
-    <PackageReference Include="YS.Knife.Hosting" Version="1.0.0" />
+    <PackageReference Include="YS.Knife.Test" Version="1.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\YS.Cache.Core.UnitTest\YS.Cache.Core.UnitTest.csproj" />
     <ProjectReference Include="..\YS.Cache.Impl.Redis\YS.Cache.Impl.Redis.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="docker-compose.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

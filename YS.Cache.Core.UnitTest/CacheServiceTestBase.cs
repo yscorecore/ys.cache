@@ -1,13 +1,16 @@
-﻿using Knife.Hosting.MSTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
 
 namespace YS.Cache
 {
-    public abstract class CacheServiceTestBase:TestBase<ICacheService>
+    public abstract class CacheServiceTestBase:Knife.Hosting.KnifeHost
     {
-        
+        public CacheServiceTestBase()
+        {
+            this.TestObject = this.Get<ICacheService>();
+        }
+        private ICacheService TestObject;
         [TestMethod]
         public void ShouldReturnDefaultValueIfNotContainsKey()
         {
