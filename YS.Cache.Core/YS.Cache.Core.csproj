@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <RootNamespace>YS.Cache</RootNamespace>
-    <Version>1.1.0</Version>
 
   </PropertyGroup>
 
