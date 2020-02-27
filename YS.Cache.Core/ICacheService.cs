@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace YS.Cache
 {
     public interface ICacheService
     {
-        (bool Exists, T Value) Get<T>(string key);
-        void Set<T>(string key, T value, TimeSpan slidingTimeSpan);
-        void Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset);
-        void RemoveByKey(string key);
+        Task<(bool Exists, T Value)> Get<T>(string key);
+        Task Set<T>(string key, T value, TimeSpan slidingTimeSpan);
+        Task Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset);
+        Task RemoveByKey(string key);
 
     }
 }

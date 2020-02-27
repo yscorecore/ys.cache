@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using YS.Knife.Test;
 
 namespace YS.Cache.Impl.Redis

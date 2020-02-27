@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Redis;
 using System;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 
 namespace YS.Cache.Impl.Redis
 {
@@ -16,16 +15,16 @@ namespace YS.Cache.Impl.Redis
         }
         private IDistributedCache distributedCache;
 
-        public (bool, T) Get<T>(string key)
+        public async Task<(bool, T)> Get<T>(string key)
         {
             if (typeof(T) == typeof(string))
             {
-                var str = this.distributedCache.GetString(key);
+                var str = await this.distributedCache.GetStringAsync(key);
                 return (str != null, (T)(object)str);
             }
             else
             {
-                var bys = this.distributedCache.Get(key);
+                var bys =await this.distributedCache.GetAsync(key);
                 if (bys == null)
                 {
                     return (false, default(T));
@@ -37,12 +36,12 @@ namespace YS.Cache.Impl.Redis
             }
         }
 
-        public void RemoveByKey(string key)
+        public Task RemoveByKey(string key)
         {
-            this.distributedCache.Remove(key);
+           return this.distributedCache.RemoveAsync(key);
         }
 
-        public void Set<T>(string key, T value, TimeSpan slidingTimeSpan)
+        public Task Set<T>(string key, T value, TimeSpan slidingTimeSpan)
         {
             if (value == null)
             {
@@ -50,20 +49,20 @@ namespace YS.Cache.Impl.Redis
             }
             if (value is string)
             {
-                this.distributedCache.SetString(key, value as string, new DistributedCacheEntryOptions
+                return this.distributedCache.SetStringAsync(key, value as string, new DistributedCacheEntryOptions
                 {
                     SlidingExpiration = slidingTimeSpan,
                 });
             }
             else
             {
-                this.distributedCache.Set(key, Object2Bytes(value), new DistributedCacheEntryOptions
+               return this.distributedCache.SetAsync(key, Object2Bytes(value), new DistributedCacheEntryOptions
                 {
                     SlidingExpiration = slidingTimeSpan,
                 });
             }
         }
-        public void Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
+        public Task Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
         {
             if (value == null)
             {
@@ -71,14 +70,14 @@ namespace YS.Cache.Impl.Redis
             }
             if (value is string)
             {
-                this.distributedCache.SetString(key, value as string, new DistributedCacheEntryOptions
+                return this.distributedCache.SetStringAsync(key, value as string, new DistributedCacheEntryOptions
                 {
                      AbsoluteExpiration=absoluteDateTimeOffset
                 });
             }
             else
             {
-                this.distributedCache.Set(key, Object2Bytes(value), new DistributedCacheEntryOptions
+               return this.distributedCache.SetAsync(key, Object2Bytes(value), new DistributedCacheEntryOptions
                 {
                     AbsoluteExpiration = absoluteDateTimeOffset,
                 });

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Threading.Tasks;
 
 namespace YS.Cache.Impl.Memory
 {
@@ -13,37 +14,40 @@ namespace YS.Cache.Impl.Memory
         private IMemoryCache memoryCache;
 
 
-        public (bool, T) Get<T>(string key)
+        public Task<(bool, T)> Get<T>(string key)
         {
             if (this.memoryCache.TryGetValue(key, out T val))
             {
-                return (true, val);
+                return Task.FromResult((true, val));
             }
-            return (false, default(T));
+            return Task.FromResult((false, default(T)));
         }
 
-        public void RemoveByKey(string key)
+        public Task RemoveByKey(string key)
         {
             this.memoryCache.Remove(key);
+            return Task.CompletedTask;
         }
-        public void Set<T>(string key, T value, TimeSpan slidingTimeSpan)
+        public Task Set<T>(string key, T value, TimeSpan slidingTimeSpan)
         {
             this.AssertNotNull(nameof(value), value);
             var cacheOptions = new MemoryCacheEntryOptions
             {
                 SlidingExpiration = slidingTimeSpan,
             };
-          
+
             this.memoryCache.Set(key, value, cacheOptions);
+            return Task.CompletedTask;
         }
-        public void Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
+        public Task Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
         {
             this.AssertNotNull(nameof(value), value);
             var cacheOptions = new MemoryCacheEntryOptions
             {
-                 AbsoluteExpiration = absoluteDateTimeOffset,
+                AbsoluteExpiration = absoluteDateTimeOffset,
             };
             this.memoryCache.Set(key, value, cacheOptions);
+            return Task.CompletedTask;
         }
         private void AssertNotNull<T>(string name, T value)
         {

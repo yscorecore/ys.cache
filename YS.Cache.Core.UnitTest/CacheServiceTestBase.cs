@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace YS.Cache
 {
-    public abstract class CacheServiceTestBase:Knife.Hosting.KnifeHost
+    public abstract class CacheServiceTestBase : Knife.Hosting.KnifeHost
     {
         public CacheServiceTestBase()
         {
@@ -12,46 +12,46 @@ namespace YS.Cache
         }
         private ICacheService TestObject;
         [TestMethod]
-        public void ShouldReturnDefaultValueIfNotContainsKey()
+        public async Task ShouldReturnDefaultValueIfNotContainsKey()
         {
-            var res = TestObject.Get<string>("abc");
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(false, res.Exists);
             Assert.AreEqual(default, res.Value);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ShouldThrowArgumentNullExceptionIfSetNullValueWithSlidingTimeSpan()
+        public async Task ShouldThrowArgumentNullExceptionIfSetNullValueWithSlidingTimeSpan()
         {
-            TestObject.Set<string>("abc", null, TimeSpan.FromSeconds(5));
+            await TestObject.Set<string>("abc", null, TimeSpan.FromSeconds(5));
         }
         [TestMethod]
-        public void ShouldReturnCachedValueIfAlreadySetValueWithSlidingTimeSpan()
+        public async Task ShouldReturnCachedValueIfAlreadySetValueWithSlidingTimeSpan()
         {
-            TestObject.Set("abc", "abcValue", TimeSpan.FromSeconds(5));
-            var res = TestObject.Get<string>("abc");
+            await TestObject.Set("abc", "abcValue", TimeSpan.FromSeconds(5));
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(true, res.Exists);
             Assert.AreEqual("abcValue", res.Value);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ShouldThrowArgumentNullExceptionIfSetNullValueWithAbsoluteDateTimeOffset()
+        public async Task ShouldThrowArgumentNullExceptionIfSetNullValueWithAbsoluteDateTimeOffset()
         {
-            TestObject.Set<string>("abc", null, DateTimeOffset.Now.AddSeconds(5));
+            await TestObject.Set<string>("abc", null, DateTimeOffset.Now.AddSeconds(5));
         }
         [TestMethod]
-        public void ShouldReturnCachedValueIfAlreadySetValueWithAbsoluteDateTimeOffset()
+        public async Task ShouldReturnCachedValueIfAlreadySetValueWithAbsoluteDateTimeOffset()
         {
-            TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddSeconds(5));
-            var res = TestObject.Get<string>("abc");
+            await TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddSeconds(5));
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(true, res.Exists);
             Assert.AreEqual("abcValue", res.Value);
         }
         [TestMethod]
-        public void ShouldReturnDefaultValueIfRemoveKey()
+        public async Task ShouldReturnDefaultValueIfRemoveKey()
         {
-            TestObject.Set("abc", "abcValue", TimeSpan.FromSeconds(5));
-            TestObject.RemoveByKey("abc");
-            var res = TestObject.Get<string>("abc");
+            await TestObject.Set("abc", "abcValue", TimeSpan.FromSeconds(5));
+            await TestObject.RemoveByKey("abc");
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(false, res.Exists);
             Assert.AreEqual(default, res.Value);
         }
@@ -59,9 +59,9 @@ namespace YS.Cache
         [TestMethod]
         public async Task ShouldReturnCachedValueIfNotExpiredSlidingTimeSpan()
         {
-            TestObject.Set("abc", "abcValue", TimeSpan.FromMilliseconds(1000));
+            await TestObject.Set("abc", "abcValue", TimeSpan.FromMilliseconds(1000));
             await Task.Delay(500);
-            var res = TestObject.Get<string>("abc");
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(true, res.Exists);
             Assert.AreEqual("abcValue", res.Value);
         }
@@ -69,9 +69,9 @@ namespace YS.Cache
         [TestMethod]
         public async Task ShouldReturnDefaultValueIfExpiredSlidingTimeSpan()
         {
-            TestObject.Set("abc", "abcValue", TimeSpan.FromMilliseconds(1000));
+            await TestObject.Set("abc", "abcValue", TimeSpan.FromMilliseconds(1000));
             await Task.Delay(1100);
-            var res = TestObject.Get<string>("abc");
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(false, res.Exists);
             Assert.AreEqual(default, res.Value);
         }
@@ -80,9 +80,9 @@ namespace YS.Cache
         [TestMethod]
         public async Task ShouldReturnCachedValueIfNotExpiredAbsoluteDateTimeOffset()
         {
-            TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(5000));
+            await TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(5000));
             await Task.Delay(500);
-            var res = TestObject.Get<string>("abc");
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(true, res.Exists);
             Assert.AreEqual("abcValue", res.Value);
         }
@@ -90,9 +90,9 @@ namespace YS.Cache
         [TestMethod]
         public async Task ShouldReturnDefaultValueIfExpiredAbsoluteDateTimeOffset()
         {
-            TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(1000));
+            await TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(1000));
             await Task.Delay(1100);
-            var res = TestObject.Get<string>("abc");
+            var res = await TestObject.Get<string>("abc");
             Assert.AreEqual(false, res.Exists);
             Assert.AreEqual(default, res.Value);
         }
@@ -100,13 +100,13 @@ namespace YS.Cache
         [TestMethod]
         public async Task ShouldReturnDefaultValueIfExpiredAbsoluteDateTimeOffsetEvenCalledBefore()
         {
-            TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(5000));
+            await TestObject.Set("abc", "abcValue", DateTimeOffset.Now.AddMilliseconds(5000));
             await Task.Delay(3000);
-            var res1 = TestObject.Get<string>("abc");
+            var res1 = await TestObject.Get<string>("abc");
             Assert.AreEqual(true, res1.Exists);
             Assert.AreEqual("abcValue", res1.Value);
             await Task.Delay(3000);
-            var res2 = TestObject.Get<string>("abc");
+            var res2 = await TestObject.Get<string>("abc");
             Assert.AreEqual(false, res2.Exists);
             Assert.AreEqual(default, res2.Value);
         }
@@ -114,13 +114,13 @@ namespace YS.Cache
         [TestMethod]
         public async Task ShouldReturnCachedValueIfCalledInTimespan()
         {
-            TestObject.Set("abc", "abcValue", TimeSpan.FromMilliseconds(1000));
+            await TestObject.Set("abc", "abcValue", TimeSpan.FromMilliseconds(1000));
             await Task.Delay(800);
-            var res1 = TestObject.Get<string>("abc");
+            var res1 = await TestObject.Get<string>("abc");
             Assert.AreEqual(true, res1.Exists);
             Assert.AreEqual("abcValue", res1.Value);
             await Task.Delay(800);
-            var res2 = TestObject.Get<string>("abc");
+            var res2 = await TestObject.Get<string>("abc");
             Assert.AreEqual(true, res2.Exists);
             Assert.AreEqual("abcValue", res2.Value);
         }

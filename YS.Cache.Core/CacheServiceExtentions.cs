@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace YS.Cache
 {
     public static class CacheServiceExtentions
     {
-        public static T TryGet<T>(this ICacheService cacheService, string key)
+        public static async Task<T> TryGet<T>(this ICacheService cacheService, string key)
         {
-            var (ok, val) = cacheService.Get<T>(key);
+            var (ok, val) = await cacheService.Get<T>(key);
             return ok ? val : default(T);
         }
 
-        public static T GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, TimeSpan slidingTimeSpan)
+        public static async Task<T> GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, TimeSpan slidingTimeSpan)
         {
-            var (ok, val) = cacheService.Get<T>(key);
+            var (ok, val) = await cacheService.Get<T>(key);
             if (ok)
             {
                 return val;
@@ -22,13 +21,13 @@ namespace YS.Cache
             else
             {
                 var newValue = valueFactory(key);
-                cacheService.Set(key, newValue, slidingTimeSpan);
+                await cacheService.Set(key, newValue, slidingTimeSpan);
                 return newValue;
             }
         }
-        public static T GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, DateTimeOffset absoluteDateTimeOffset)
+        public static async Task<T> GetOrCreate<T>(this ICacheService cacheService, string key, Func<string, T> valueFactory, DateTimeOffset absoluteDateTimeOffset)
         {
-            var (ok, val) = cacheService.Get<T>(key);
+            var (ok, val) = await cacheService.Get<T>(key);
             if (ok)
             {
                 return val;
@@ -36,7 +35,7 @@ namespace YS.Cache
             else
             {
                 var newValue = valueFactory(key);
-                cacheService.Set(key, newValue, absoluteDateTimeOffset);
+                await cacheService.Set(key, newValue, absoluteDateTimeOffset);
                 return newValue;
             }
         }
