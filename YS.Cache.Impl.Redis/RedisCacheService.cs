@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace YS.Cache.Impl.Redis
 {
-    [ServiceClass]
+    [ServiceClass(Lifetime = ServiceLifetime.Singleton)]
     public class RedisCacheService : ICacheService
     {
         public RedisCacheService(IDistributedCache distributedCache)
@@ -24,21 +24,21 @@ namespace YS.Cache.Impl.Redis
             }
             else
             {
-                var bys =await this.distributedCache.GetAsync(key);
+                var bys = await this.distributedCache.GetAsync(key);
                 if (bys == null)
                 {
                     return (false, default(T));
                 }
                 else
                 {
-                    return (true, (T)Bytes2Object(bys));
+                    return (true, JsonSerializer.Deserialize<T>(bys));
                 }
             }
         }
 
         public Task RemoveByKey(string key)
         {
-           return this.distributedCache.RemoveAsync(key);
+            return this.distributedCache.RemoveAsync(key);
         }
 
         public Task Set<T>(string key, T value, TimeSpan slidingTimeSpan)
@@ -49,17 +49,21 @@ namespace YS.Cache.Impl.Redis
             }
             if (value is string)
             {
-                return this.distributedCache.SetStringAsync(key, value as string, new DistributedCacheEntryOptions
-                {
-                    SlidingExpiration = slidingTimeSpan,
-                });
+                return this.distributedCache.SetStringAsync(key,
+                    value as string,
+                    new DistributedCacheEntryOptions
+                    {
+                        SlidingExpiration = slidingTimeSpan,
+                    });
             }
             else
             {
-               return this.distributedCache.SetAsync(key, Object2Bytes(value), new DistributedCacheEntryOptions
-                {
-                    SlidingExpiration = slidingTimeSpan,
-                });
+                return this.distributedCache.SetAsync(key,
+                    JsonSerializer.SerializeToUtf8Bytes(value),
+                    new DistributedCacheEntryOptions
+                    {
+                        SlidingExpiration = slidingTimeSpan,
+                    });
             }
         }
         public Task Set<T>(string key, T value, DateTimeOffset absoluteDateTimeOffset)
@@ -72,38 +76,18 @@ namespace YS.Cache.Impl.Redis
             {
                 return this.distributedCache.SetStringAsync(key, value as string, new DistributedCacheEntryOptions
                 {
-                     AbsoluteExpiration=absoluteDateTimeOffset
+                    AbsoluteExpiration = absoluteDateTimeOffset
                 });
             }
             else
             {
-               return this.distributedCache.SetAsync(key, Object2Bytes(value), new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpiration = absoluteDateTimeOffset,
-                });
+                return this.distributedCache.SetAsync(key,
+                    JsonSerializer.SerializeToUtf8Bytes(value),
+                    new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpiration = absoluteDateTimeOffset,
+                    });
             }
         }
-        private byte[] Object2Bytes(object obj)
-        {
-            using (var ms = new MemoryStream())
-            {
-                var bf = new BinaryFormatter();
-                bf.Serialize(ms, obj);
-                ms.Seek(0, SeekOrigin.Begin);
-                return ms.ToArray();
-            }
-        }
-        private object Bytes2Object(byte[] bys)
-        {
-            using (var ms = new MemoryStream(bys))
-            {
-                var bf = new BinaryFormatter();
-                return bf.Deserialize(ms);
-            }
-        }
-
-      
-
-      
     }
 }

@@ -12,8 +12,9 @@ namespace YS.Cache.Impl.Redis
             var options = configuration.GetConfigOrNew<RedisCacheOptions>();
             services.AddDistributedRedisCache((setupAction) =>
             {
-                setupAction.InstanceName = options.InstanceName;
+                setupAction.InstanceName = options.CacheKeyPrefix;
                 setupAction.Configuration = options.ConnectionString;
+                setupAction.ConfigurationOptions = options.Configuration;
             });
         }
     }

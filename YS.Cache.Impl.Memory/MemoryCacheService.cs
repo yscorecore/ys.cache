@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
 namespace YS.Cache.Impl.Memory
 {
-    [ServiceClass]
+    [ServiceClass(Lifetime = ServiceLifetime.Singleton)]
     public class MemoryCacheService : ICacheService
     {
         public MemoryCacheService(IMemoryCache memoryCache)
