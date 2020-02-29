@@ -124,5 +124,23 @@ namespace YS.Cache
             Assert.AreEqual(true, res2.Exists);
             Assert.AreEqual("abcValue", res2.Value);
         }
+        [TestMethod]
+        public async Task ShouldSuccessWhenSetAndGetObject()
+        {
+            string key = RandomUtility.RandomVarName(16);
+            var user = new User { Name = "ZhangSan", Age = 16, Birthday = DateTimeOffset.Now };
+            await TestObject.Set(key, user, TimeSpan.FromSeconds(5));
+            var cachedUser = await TestObject.Get<User>(key);
+            Assert.IsTrue(cachedUser.Exists);
+            Assert.AreEqual(user.Name, cachedUser.Value.Name);
+            Assert.AreEqual(user.Age, cachedUser.Value.Age);
+            Assert.AreEqual(user.Birthday, cachedUser.Value.Birthday);
+        }
+        private class User
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+            public DateTimeOffset Birthday { get; set; }
+        }
     }
 }
