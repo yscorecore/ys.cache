@@ -1,7 +1,5 @@
 ﻿using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using YS.Knife;
 
 namespace YS.Cache.Impl.Redis
 {
