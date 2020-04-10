@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YS.Cache.Core.UnitTest\YS.Cache.Core.UnitTest.csproj" />
-    <ProjectReference Include="..\YS.Cache.Impl.Memory\YS.Cache.Impl.Memory.csproj" />
+    <ProjectReference Include="..\..\src\YS.Cache.Impl.Memory\YS.Cache.Impl.Memory.csproj" />
   </ItemGroup>
 
 </Project>
