@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using YS.Knife;
 
 namespace YS.Cache.Impl.Memory
 {
