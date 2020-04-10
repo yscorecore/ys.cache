@@ -8,7 +8,7 @@ namespace YS.Cache
     {
         public CacheServiceTestBase()
         {
-            this.TestObject = this.Get<ICacheService>();
+            this.TestObject = this.GetService<ICacheService>();
         }
         private ICacheService TestObject;
         [TestMethod]
@@ -127,7 +127,7 @@ namespace YS.Cache
         [TestMethod]
         public async Task ShouldSuccessWhenSetAndGetObject()
         {
-            string key = RandomUtility.RandomVarName(16);
+            string key = DateTimeOffset.UtcNow.Ticks.ToString();
             var user = new User { Name = "ZhangSan", Age = 16, Birthday = DateTimeOffset.Now };
             await TestObject.Set(key, user, TimeSpan.FromSeconds(5));
             var cachedUser = await TestObject.Get<User>(key);
