@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using YS.Knife;
 
 namespace YS.Cache.Impl.Redis
 {

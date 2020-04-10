@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using YS.Knife;
 
 namespace YS.Cache.Impl.Redis
 {
-    public class ServiceLoader : IServiceLoader
+    public class ServiceRegister : IServiceRegister
     {
-        public void LoadServices(IServiceCollection services, IConfiguration configuration)
+        public void RegisteServices(IServiceCollection services, IRegisteContext context)
         {
-            var options = configuration.GetConfigOrNew<RedisCacheOptions>();
+            _ = context ?? throw new ArgumentNullException(nameof(context));
+            var options = context.Configuration.GetConfigOrNew<RedisCacheOptions>();
             services.AddDistributedRedisCache((setupAction) =>
             {
                 setupAction.InstanceName = options.CacheKeyPrefix;
