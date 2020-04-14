@@ -17,7 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="YS.Knife.Hosting" Version="1.2.2" />
+    <PackageReference Include="YS.Knife.Hosting" Version="1.2.3" />
   </ItemGroup>
 
   <ItemGroup>
